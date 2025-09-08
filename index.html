@@ -3,27 +3,25 @@
   <head>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
   </head>
   <body style="margin : 0px; overflow: hidden;">
     <a-scene embedded arjs>
-      <a-assets>
-        <img id="my-font-image" src="path/to/my-font-image.png">
-        <a-asset-item id="my-font" src="path/to/my-font.json"></a-asset-item>
-      </a-assets>
 
       <a-marker-camera preset="hiro">
         <a-text
           value="ようこそ"
-          position="0 1.6 -3"
+          position="0 0.5 -1"  
+          rotation="-90 0 0"
           color="#FFF"
           width="5"
           align="center"
-          font="my-font"
-          font-image="my-font-image"
+          font="Noto Sans JP"
+          transparent="true"
         ></a-text>
 
         <a-plane
-          position="0 0 -4"
+          position="0 0 -1"
           rotation="-90 0 0"
           width="10"
           height="10"
@@ -31,7 +29,6 @@
         ></a-plane>
       </a-marker-camera>
 
-      <a-entity camera></a-entity>
     </a-scene>
   </body>
 </html>
