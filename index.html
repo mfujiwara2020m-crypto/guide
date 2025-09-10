@@ -18,7 +18,7 @@
       <!-- テキストの挿入 -->
       <a-text position="-1.5 2 -3" value="Sanotech night" color="purple" width="10"></a-text>
    <!-- 棒人間-->
-      <a-scene>
+     <a-scene>
   <a-entity position="0 0 -3">
     <a-sphere position="0 1.0 0" radius="0.5" color="#008b8b"></a-sphere>
 
@@ -26,12 +26,11 @@
 
     <a-box position="-0.6 0.3 0" depth="0.2" height="0.2" width="0.8" color="#008b8b"></a-box>
 
-    <a-entity position="-0.6 0.3 0">
-      <a-box position="0 0 0" depth="0.2" height="0.2" width="0.8" color="#008b8b"
-        animation="property: rotation; from: 0 0 0; to: 0 0 -90; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine;"
-      ></a-box>
+    <a-entity position="0.2 0.3 0" 
+      animation="property: rotation; from: 0 0 0; to: 0 0 -90; dir: alternate; dur: 1000; loop: true; easing: easeInOutSine;">
+      <a-box position="0.4 0 0" depth="0.2" height="0.2" width="0.8" color="#008b8b"></a-box>
     </a-entity>
-
+    
     <a-box position="-0.2 -0.2 0" depth="0.2" height="0.5" width="0.2" color="#008b8b"></a-box>
 
     <a-box position="0.2 -0.2 0" depth="0.2" height="0.5" width="0.2" color="#008b8b"></a-box>
@@ -39,11 +38,12 @@
   
   <a-entity position="0 0 0" camera look-controls></a-entity>
   <a-light type="ambient" color="#fff"></a-light>
-</a-scene>      </a-marker>
+</a-scene>   </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
   </body>
 </html>
+
 
 
 
