@@ -34,11 +34,22 @@
 
       <!-- 右足 -->
       <a-box position="0.2 -0.2 -3" depth="0.2" height="0.5" width="0.2" color="#008b8b""></a-box>
+        <!-- 右腕（アニメーション付き） -->
+      <a-box
+        id="rightArm"
+        position="0.3 1.5 0"
+        depth="0.1"
+        height="0.1"
+        width="0.6"
+        color="blue"
+        animation="property: rotation; to: 0 0 45; dur: 500; dir: alternate; loop: true"
+      ></a-box>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
   </body>
 </html>
+
 
 
 
