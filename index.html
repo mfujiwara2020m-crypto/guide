@@ -14,14 +14,11 @@
         <img id="originalImg" src="original.png">
       </a-assets>
 
-      <a-entity camera>
-        <a-image 
-          src="#testImage" 
-          position="0 0 -50"  /* 遠く（奥）に配置 */
-          scale="80 50 1"     /* 画面を覆うように大きく拡大 */
-          shader="flat">      /* 影の影響を受けない設定 */
-        </a-image>
-      </a-entity>
+      <a-sky 
+        src="#testImage" 
+        rotation="0 -90 0" 
+        opacity="0.8">
+      </a-sky>
 
       <a-marker preset="hiro">
         
@@ -42,6 +39,8 @@
         </a-text>
 
       </a-marker>
+
+      <a-entity camera look-controls></a-entity>
       
     </a-scene>
   </body>
