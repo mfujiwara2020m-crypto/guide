@@ -5,89 +5,60 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-      /* 【修正1】起動時の全画面画像を画面いっぱいに大きく表示 */
-      #start-screen {
+      /* test.png を画面全体に固定表示（消さない） */
+      #overlay-screen {
         position: fixed;
         top: 0; left: 0;
-        width: 100vw;   /* 画面幅いっぱい */
-        height: 100vh;  /* 画面高さいっぱい */
-        background-color: black; /* 背景を黒に */
-        z-index: 999;
+        width: 100vw;
+        height: 100vh;
+        z-index: 10; /* ARシーンより前面に配置 */
+        pointer-events: none; /* 下のAR操作を邪魔しない設定 */
         display: flex;
         justify-content: center;
         align-items: center;
-        overflow: hidden; /* はみ出し防止 */
       }
-      #start-screen img {
-        /* アスペクト比を保ちつつ、画面を覆うように拡大 */
+      #overlay-screen img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* 画面に収めるなら contain、画面いっぱいなら cover */
-      }
-      #start-screen p {
-        position: absolute;
-        bottom: 10%;
-        left: 50%;
-        transform: translateX(-50%);
-        color: white;
-        background-color: rgba(0,0,0,0.5);
-        padding: 10px;
-        border-radius: 5px;
-        font-family: sans-serif;
+        object-fit: contain; /* 画面に収める */
+        opacity: 0.7; /* ★後ろのマーカーが見えるように少し透明にする */
       }
     </style>
   </head>
 
   <body style="margin:0px; overflow:hidden;">
     
-    <div id="start-screen">
-      <img src="test.png" alt="Test Image">
-      <p>Hiroマーカーをかざしてください</p>
+    <div id="overlay-screen">
+      <img src="test.png">
     </div>
 
     <a-scene embedded vr-mode-ui="enabled: false;" arjs="sourceType: webcam; debugUIEnabled: false;">
       
       <a-assets>
-        <img id="testImage" src="test.png">
-        <img id="originalImage" src="original.png">
+        <img id="originalImg" src="original.png">
       </a-assets>
 
-      <a-marker preset="hiro" id="marker">
+      <a-marker preset="hiro">
         
         <a-image 
-          src="#testImage" 
-          position="0 0.01 0" /* チラつき防止のため、0よりわずかに上に配置 */
+          src="#originalImg" 
+          position="0 0.1 0" 
           rotation="-90 0 0" 
-          width="1" height="1">
+          width="1.5" height="1.5">
         </a-image>
 
         <a-text 
           value="Sano Tech NIGHT" 
-          position="0 0.5 0" /* メッセージは少し上に浮かせる */
+          position="0 1 0" 
           align="center" 
           color="purple" 
           rotation="-90 0 0" 
-          width="4">
+          width="5">
         </a-text>
 
       </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
-
-    <script>
-      // マーカーを検知したら全画面画像を消す処理
-      const marker = document.querySelector('#marker');
-      const startScreen = document.querySelector('#start-screen');
-
-      marker.addEventListener('markerFound', () => {
-        startScreen.style.display = 'none'; // マーカーが見つかったら全画面画像を非表示に
-      });
-
-      // マーカーが外れたら、全画面画像を再度表示させる設定
-      // marker.addEventListener('markerLost', () => {
-      //   startScreen.style.display = 'flex'; 
-      // });
-    </script>
   </body>
 </html>
