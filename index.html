@@ -7,7 +7,10 @@
   </head>
 
   <body style="margin:0px; overflow:hidden;">
-    <a-scene embedded vr-mode-ui="enabled: false;" arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-scene 
+      embedded 
+      vr-mode-ui="enabled: false;" 
+      arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;">
       
       <a-assets>
         <img id="testImage" src="test.png">
@@ -15,14 +18,11 @@
       </a-assets>
 
       <a-sky 
-        id="bg-sky"
         src="#testImage" 
-        rotation="0 -90 0" 
-        opacity="0.6"
-        animation="property: components.material.material.opacity; dur: 500;">
+        rotation="0 -90 0">
       </a-sky>
 
-      <a-marker preset="hiro" id="hiro-marker">
+      <a-marker preset="hiro">
         <a-image 
           src="#originalImg" 
           position="0 0.5 0" 
@@ -41,21 +41,7 @@
       </a-marker>
 
       <a-entity camera look-controls></a-entity>
+      
     </a-scene>
-
-    <script>
-      const marker = document.querySelector('#hiro-marker');
-      const sky = document.querySelector('#bg-sky');
-
-      // マーカーを見つけた時：背景を100%不透明にし、くっきり表示
-      marker.addEventListener('markerFound', () => {
-        sky.setAttribute('opacity', '1.0');
-      });
-
-      // マーカーを見失った時：再び少し透かしてマーカーを探せるようにする
-      marker.addEventListener('markerLost', () => {
-        sky.setAttribute('opacity', '0.6');
-      });
-    </script>
   </body>
 </html>
