@@ -4,61 +4,45 @@
     <meta charset="utf-8">
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <style>
-      /* test.png を画面全体に固定表示（消さない） */
-      #overlay-screen {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 10; /* ARシーンより前面に配置 */
-        pointer-events: none; /* 下のAR操作を邪魔しない設定 */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      #overlay-screen img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* 画面に収める */
-        opacity: 0.7; /* ★後ろのマーカーが見えるように少し透明にする */
-      }
-    </style>
   </head>
 
   <body style="margin:0px; overflow:hidden;">
-    
-    <div id="overlay-screen">
-      <img src="test.png">
-    </div>
-
     <a-scene embedded vr-mode-ui="enabled: false;" arjs="sourceType: webcam; debugUIEnabled: false;">
       
       <a-assets>
+        <img id="testImage" src="test.png">
         <img id="originalImg" src="original.png">
       </a-assets>
+
+      <a-entity camera>
+        <a-image 
+          src="#testImage" 
+          position="0 0 -50"  /* 遠く（奥）に配置 */
+          scale="80 50 1"     /* 画面を覆うように大きく拡大 */
+          shader="flat">      /* 影の影響を受けない設定 */
+        </a-image>
+      </a-entity>
 
       <a-marker preset="hiro">
         
         <a-image 
           src="#originalImg" 
-          position="0 0.1 0" 
+          position="0 0.5 0" 
           rotation="-90 0 0" 
-          width="1.5" height="1.5">
+          width="2" height="2">
         </a-image>
 
         <a-text 
           value="Sano Tech NIGHT" 
-          position="0 1 0" 
+          position="0 1.5 0" 
           align="center" 
           color="purple" 
           rotation="-90 0 0" 
-          width="5">
+          width="6">
         </a-text>
 
       </a-marker>
-
-      <a-entity camera></a-entity>
+      
     </a-scene>
   </body>
 </html>
