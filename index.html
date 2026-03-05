@@ -2,38 +2,78 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+      /* 起動時に表示される全画面画像のスタイル */
+      #start-screen {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        z-index: 999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #start-screen img {
+        max-width: 80%;
+        max-height: 80%;
+        border: 5px solid white;
+      }
+    </style>
   </head>
 
   <body style="margin:0px; overflow:hidden;">
-    <a-scene embedded arjs="debugUIEnabled: false; sourceType: webcam;">
+    
+    <div id="start-screen">
+      <img src="test.png" alt="Test Image">
+      <p style="position:absolute; bottom:20%; color:white; font-family:sans-serif;">Hiroマーカーをかざしてください</p>
+    </div>
+
+    <a-scene embedded vr-mode-ui="enabled: false;" arjs="sourceType: webcam; debugUIEnabled: false;">
       
       <a-assets>
-        <img id="myImage" src="original.png">
+        <img id="testImage" src="test.png">
+        <img id="originalImage" src="original.png">
       </a-assets>
 
-      <a-marker preset="hiro">
+      <a-marker preset="hiro" id="marker">
         
         <a-image 
-          src="#myImage" 
+          src="#testImage" 
           position="0 0 0" 
           rotation="-90 0 0" 
-          width="1" height="1">
+          width="2" height="2">
         </a-image>
 
         <a-text 
           value="Welcome to Sano Tech NIGHT" 
-          position="0 0.5 0" 
+          position="0 1.2 0" 
           align="center" 
           color="purple" 
           rotation="-90 0 0" 
-          width="3">
+          width="5">
         </a-text>
 
       </a-marker>
+
       <a-entity camera></a-entity>
-      
     </a-scene>
+
+    <script>
+      // マーカーを検知したら全画面画像を消す処理
+      const marker = document.querySelector('#marker');
+      const startScreen = document.querySelector('#start-screen');
+
+      marker.addEventListener('markerFound', () => {
+        startScreen.style.display = 'none'; // マーカーが見つかったら全画面画像を非表示に
+      });
+
+      marker.addEventListener('markerLost', () => {
+        // 必要であれば、マーカーが外れた時に再度表示させることも可能です
+        // startScreen.style.display = 'flex'; 
+      });
+    </script>
   </body>
 </html>
