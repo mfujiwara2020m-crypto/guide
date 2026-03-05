@@ -15,13 +15,14 @@
       </a-assets>
 
       <a-sky 
+        id="bg-sky"
         src="#testImage" 
         rotation="0 -90 0" 
-        opacity="0.8">
+        opacity="0.6"
+        animation="property: components.material.material.opacity; dur: 500;">
       </a-sky>
 
-      <a-marker preset="hiro">
-        
+      <a-marker preset="hiro" id="hiro-marker">
         <a-image 
           src="#originalImg" 
           position="0 0.5 0" 
@@ -37,11 +38,24 @@
           rotation="-90 0 0" 
           width="6">
         </a-text>
-
       </a-marker>
 
       <a-entity camera look-controls></a-entity>
-      
     </a-scene>
+
+    <script>
+      const marker = document.querySelector('#hiro-marker');
+      const sky = document.querySelector('#bg-sky');
+
+      // マーカーを見つけた時：背景を100%不透明にし、くっきり表示
+      marker.addEventListener('markerFound', () => {
+        sky.setAttribute('opacity', '1.0');
+      });
+
+      // マーカーを見失った時：再び少し透かしてマーカーを探せるようにする
+      marker.addEventListener('markerLost', () => {
+        sky.setAttribute('opacity', '0.6');
+      });
+    </script>
   </body>
 </html>
