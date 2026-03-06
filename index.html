@@ -18,10 +18,12 @@
       </a-assets>
 
       <a-image 
+        id="bg-panel"
         src="#testImage" 
         position="0 0 -100" 
         scale="200 120 1" 
-        shader="flat">
+        shader="flat"
+        visible="false">
       </a-image>
 
       <a-marker preset="hiro" id="marker">
@@ -47,20 +49,30 @@
     </a-scene>
 
     <script>
-      // マーカーが外れても消えないようにするスクリプト
       const marker = document.querySelector('#marker');
-      
+      const bgPanel = document.querySelector('#bg-sky') || document.querySelector('#bg-panel');
+      let isFound = false;
+
+      // マーカーを一度でも見つけたら実行
       marker.addEventListener('markerFound', function() {
-        console.log("マーカーを検知しました");
+        if (!isFound) {
+          isFound = true;
+          // 背景を表示する
+          bgPanel.setAttribute('visible', 'true');
+          console.log("マーカー検知：背景とARを表示しました");
+        }
       });
 
-      // マーカーを見失った（はずれた）時のイベントを上書き
-      marker.addEventListener('markerLost', function(e) {
-        // デフォルトの「消去」を阻止し、表示を維持させる
-        // ただし、AR.js内部で非表示にされる場合があるため、以下の処理で強制表示します
-        setTimeout(() => {
-          marker.object3D.visible = true;
-        }, 10);
+      // マーカーから外れても消さない設定
+      marker.addEventListener('markerLost', function() {
+        if (isFound) {
+          // 強制的に表示を維持
+          marker.setAttribute('visible', 'true');
+          // AR.jsの内部的な非表示処理を上書きするために少し遅らせて再セット
+          setTimeout(() => {
+            marker.object3D.visible = true;
+          }, 10);
+        }
       });
     </script>
   </body>
