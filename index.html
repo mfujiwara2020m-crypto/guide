@@ -7,80 +7,75 @@
   </head>
 
   <body style="margin:0px; overflow:hidden;">
-    <a-scene 
-      embedded 
-      vr-mode-ui="enabled: false;" 
-      arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-scene embedded vr-mode-ui="enabled: false;" arjs="sourceType: webcam; debugUIEnabled: false;">
       
       <a-assets>
         <img id="testImage" src="test.png">
         <img id="originalImg" src="original.png">
       </a-assets>
 
-      <a-image 
-        id="bg-panel"
-        src="#testImage" 
-        position="0 0 -20" 
-        scale="40 25 1" 
-        shader="flat"
-        visible="false">
-      </a-image>
+      <a-entity camera id="main-camera" look-controls>
+        
+        <a-image 
+          id="bg-panel"
+          src="#testImage" 
+          position="0 0 -20" 
+          scale="40 25 1" 
+          material="shader: flat; opacity: 0; transparent: true;">
+        </a-image>
 
-      <a-marker preset="hiro" id="marker">
-        <a-entity id="ar-content" visible="false">
-          
-          <a-image 
-            id="original-sprite"
-            src="#originalImg" 
-            position="0 0 0" 
-            scale="5 5 1"
-            animation="property: scale; to: 1.5 1.5 1; dur: 3000; easing: easeInOutQuad; startEvents: start-shrinking">
-          </a-image>
+        <a-image 
+          id="original-sprite"
+          src="#originalImg" 
+          position="0 0 -5" 
+          scale="10 10 1"
+          material="shader: flat; opacity: 0; transparent: true;"
+          animation="property: scale; to: 2 2 1; dur: 3000; easing: easeOutQuad; startEvents: start-shrinking"
+          animation__fade="property: material.opacity; to: 1; dur: 500; startEvents: start-fadein">
+        </a-image>
 
-          <a-text 
-            id="message-text"
-            value="Sano Tech NIGHT" 
-            position="0 1.2 0" 
-            align="center" 
-            color="purple" 
-            width="6"
-            visible="false">
-          </a-text>
-        </a-entity>
-      </a-marker>
+        <a-text 
+          id="message-text"
+          value="Sano Tech NIGHT" 
+          position="0 1.5 -4" 
+          align="center" 
+          color="purple" 
+          width="6"
+          material="opacity: 0; transparent: true;">
+        </a-text>
 
-      <a-entity camera id="main-camera" look-controls></a-entity>
+      </a-entity>
+
+      <a-marker preset="hiro" id="marker-switch"></a-marker>
       
     </a-scene>
 
     <script>
-      const marker = document.querySelector('#marker');
-      const content = document.querySelector('#ar-content');
-      const bgPanel = document.querySelector('#bg-panel');
-      const camera = document.querySelector('#main-camera');
+      const marker = document.querySelector('#marker-switch');
+      const bg = document.querySelector('#bg-panel');
       const sprite = document.querySelector('#original-sprite');
-      const message = document.querySelector('#message-text');
-      let isFound = false;
+      const msg = document.querySelector('#message-text');
+      
+      let isTriggered = false;
 
-      marker.addEventListener('markerFound', function() {
-        if (!isFound) {
-          isFound = true;
-          
-          // ステップ1: 背景を表示してカメラに固定（即時）
-          bgPanel.setAttribute('visible', 'true');
-          camera.appendChild(bgPanel);
+      // マーカーを検知した時の処理
+      marker.addEventListener('markerFound', () => {
+        if (!isTriggered) {
+          isTriggered = true;
+          console.log("マーカー検知！演出を開始します...");
 
-          // ステップ2: 3秒後(3000ms)に original を巨大なサイズで出現させる
+          // ① 即座に背景を不透明にする
+          bg.setAttribute('material', 'opacity', '1');
+
+          // ② 3秒(3000ms)待ってからメイン画像を表示
           setTimeout(() => {
-            content.setAttribute('visible', 'true');
-            content.setAttribute('position', '0 0 -5'); // カメラの5m先に固定
-            camera.appendChild(content);
-
-            // ステップ3: 出現と同時に縮小アニメーションを開始
+            // フェードインと縮小アニメーションを開始
+            sprite.emit('start-fadein');
             sprite.emit('start-shrinking');
             
-            // メッセージも少し遅れて、あるいは同時に出す
-            message.setAttribute('visible', 'true');
+            // メッセージも表示
+            msg.setAttribute('material', 'opacity', '1');
+            console.log("演出完了");
           }, 3000);
         }
       });
