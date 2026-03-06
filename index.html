@@ -20,58 +20,68 @@
       <a-image 
         id="bg-panel"
         src="#testImage" 
-        position="0 0 -100" 
-        scale="200 120 1" 
+        position="0 0 -20" 
+        scale="40 25 1" 
         shader="flat"
         visible="false">
       </a-image>
 
       <a-marker preset="hiro" id="marker">
-        <a-image 
-          src="#originalImg" 
-          position="0 0.5 0" 
-          rotation="-90 0 0" 
-          width="2" height="2">
-        </a-image>
+        <a-entity id="ar-content" visible="false">
+          
+          <a-image 
+            id="original-sprite"
+            src="#originalImg" 
+            position="0 0 0" 
+            scale="5 5 1"
+            animation="property: scale; to: 1.5 1.5 1; dur: 3000; easing: easeInOutQuad; startEvents: start-shrinking">
+          </a-image>
 
-        <a-text 
-          value="Sano Tech NIGHT" 
-          position="0 1.5 0" 
-          align="center" 
-          color="purple" 
-          rotation="-90 0 0" 
-          width="6">
-        </a-text>
+          <a-text 
+            id="message-text"
+            value="Sano Tech NIGHT" 
+            position="0 1.2 0" 
+            align="center" 
+            color="purple" 
+            width="6"
+            visible="false">
+          </a-text>
+        </a-entity>
       </a-marker>
 
-      <a-entity camera look-controls></a-entity>
+      <a-entity camera id="main-camera" look-controls></a-entity>
       
     </a-scene>
 
     <script>
       const marker = document.querySelector('#marker');
-      const bgPanel = document.querySelector('#bg-sky') || document.querySelector('#bg-panel');
+      const content = document.querySelector('#ar-content');
+      const bgPanel = document.querySelector('#bg-panel');
+      const camera = document.querySelector('#main-camera');
+      const sprite = document.querySelector('#original-sprite');
+      const message = document.querySelector('#message-text');
       let isFound = false;
 
-      // マーカーを一度でも見つけたら実行
       marker.addEventListener('markerFound', function() {
         if (!isFound) {
           isFound = true;
-          // 背景を表示する
+          
+          // ステップ1: 背景を表示してカメラに固定（即時）
           bgPanel.setAttribute('visible', 'true');
-          console.log("マーカー検知：背景とARを表示しました");
-        }
-      });
+          camera.appendChild(bgPanel);
 
-      // マーカーから外れても消さない設定
-      marker.addEventListener('markerLost', function() {
-        if (isFound) {
-          // 強制的に表示を維持
-          marker.setAttribute('visible', 'true');
-          // AR.jsの内部的な非表示処理を上書きするために少し遅らせて再セット
+          // ステップ2: 3秒後(3000ms)に original を巨大なサイズで出現させる
           setTimeout(() => {
-            marker.object3D.visible = true;
-          }, 10);
+            content.setAttribute('visible', 'true');
+            content.setAttribute('position', '0 0 -5'); // カメラの5m先に固定
+            camera.appendChild(content);
+
+            // ステップ3: 出現と同時に縮小アニメーションを開始
+            sprite.emit('start-shrinking');
+            
+            // メッセージも少し遅れて、あるいは同時に出す
+            message.setAttribute('visible', 'true');
+          }, 3000);
         }
       });
     </script>
