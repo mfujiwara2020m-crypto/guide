@@ -24,7 +24,7 @@
         shader="flat">
       </a-image>
 
-      <a-marker preset="hiro">
+      <a-marker preset="hiro" id="marker">
         <a-image 
           src="#originalImg" 
           position="0 0.5 0" 
@@ -45,5 +45,23 @@
       <a-entity camera look-controls></a-entity>
       
     </a-scene>
+
+    <script>
+      // マーカーが外れても消えないようにするスクリプト
+      const marker = document.querySelector('#marker');
+      
+      marker.addEventListener('markerFound', function() {
+        console.log("マーカーを検知しました");
+      });
+
+      // マーカーを見失った（はずれた）時のイベントを上書き
+      marker.addEventListener('markerLost', function(e) {
+        // デフォルトの「消去」を阻止し、表示を維持させる
+        // ただし、AR.js内部で非表示にされる場合があるため、以下の処理で強制表示します
+        setTimeout(() => {
+          marker.object3D.visible = true;
+        }, 10);
+      });
+    </script>
   </body>
 </html>
