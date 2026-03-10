@@ -11,7 +11,7 @@
       embedded 
       vr-mode-ui="enabled: false;" 
       arjs="sourceType: webcam; debugUIEnabled: false;"
-      renderer="precision: medium; logarithmicDepthBuffer: true; antialias: true;">
+      renderer="precision: medium; logarithmicDepthBuffer: true;">
       
       <a-assets>
         <img id="testImage" src="test.png">
@@ -43,16 +43,15 @@
         <a-image
           id="message-text"
           src="#messageImg"
-          position="0 1.2 -1.2"
+          position="0 1.2 -1.5"
           scale="4 1.5 1" 
-          material="shader: flat; transparent: true; opacity: 0; depthWrite: false; depthTest: false;"
+          material="shader: flat; transparent: true; opacity: 0; alphaTest: 0.1; depthWrite: false; depthTest: false;"
           visible="false">
         </a-image>
 
       </a-entity>
 
       <a-marker preset="hiro" id="marker-switch"></a-marker>
-      
     </a-scene>
 
     <script>
@@ -63,29 +62,27 @@
       
       let isTriggered = false;
 
-      // iPhoneのセンサー起動用の儀式
-      window.addEventListener('touchstart', () => { 
-        console.log("Touched to enable sensors"); 
-      });
+      // 画面タップでセンサーを有効化
+      window.addEventListener('touchstart', () => { console.log("Sensors active"); });
 
       marker.addEventListener('markerFound', () => {
         if (!isTriggered) {
           isTriggered = true;
 
-          // 背景を表示
+          // 背景を即座に表示
           bg.setAttribute('visible', 'true');
           bg.setAttribute('material', 'opacity', '1');
 
-          // 3秒後に演出
+          // 3秒後に演出開始
           setTimeout(() => {
-            // メイン画像の演出
+            // メイン画像の表示と縮小
             sprite.emit('start-fadein');
             sprite.emit('start-shrinking');
             
-            // メッセージ（画像）を表示
+            // メッセージ画像の表示（不透明度を1にする命令を明確に出す）
             msg.setAttribute('visible', 'true');
-            // opacity: 1にして表示
             msg.setAttribute('material', 'opacity', '1');
+            console.log("Message displayed");
           }, 3000);
         }
       });
