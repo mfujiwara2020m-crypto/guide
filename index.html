@@ -16,6 +16,7 @@
       <a-assets>
         <img id="testImage" src="test.png">
         <img id="originalImg" src="original_v2.png">
+        <img id="messageImg" src="message.png">
       </a-assets>
 
       <a-image 
@@ -33,22 +34,20 @@
           id="original-sprite"
           src="#originalImg" 
           position="0 0 -5" 
-          scale="10 10 1"
-          material="shader: flat; transparent: true; opacity: 0; alphaTest: 0.5; depthWrite: false;"
-          animation="property: scale; to: 2 2 1; dur: 3000; easing: easeOutQuad; startEvents: start-shrinking"
+          scale="10 8 1"
+          material="shader: flat; transparent: true; opacity: 0; alphaTest: 0.5; depthWrite: false; depthTest: false;"
+          animation="property: scale; to: 2 1.6 1; dur: 3000; easing: easeOutQuad; startEvents: start-shrinking"
           animation__fade="property: material.opacity; to: 1; dur: 500; startEvents: start-fadein">
         </a-image>
 
-        <a-text 
+        <a-image
           id="message-text"
-          value="WELCOME TO SANOTECH NIGHT" 
-          position="0 1.2 -2" 
-          align="center" 
-          color="#FF00FF" 
-          width="4"
-          material="shader: flat; transparent: true; opacity: 0; depthTest: false;"
+          src="#messageImg"
+          position="0 1.2 -1.2"
+          scale="4 1.5 1" 
+          material="shader: flat; transparent: true; opacity: 0; depthWrite: false; depthTest: false;"
           visible="false">
-        </a-text>
+        </a-image>
 
       </a-entity>
 
@@ -64,27 +63,28 @@
       
       let isTriggered = false;
 
-      // iPad対策：クリックイベント
-      window.addEventListener('click', function () {
-          console.log("Device Ready");
+      // iPhoneのセンサー起動用の儀式
+      window.addEventListener('touchstart', () => { 
+        console.log("Touched to enable sensors"); 
       });
 
       marker.addEventListener('markerFound', () => {
         if (!isTriggered) {
           isTriggered = true;
 
-          // ① 背景を即座に表示
+          // 背景を表示
           bg.setAttribute('visible', 'true');
           bg.setAttribute('material', 'opacity', '1');
 
-          // ② 3秒後に画像と文字を表示
+          // 3秒後に演出
           setTimeout(() => {
             // メイン画像の演出
             sprite.emit('start-fadein');
             sprite.emit('start-shrinking');
             
-            // 文字の表示（背景画像より手前に来るように設定済み）
+            // メッセージ（画像）を表示
             msg.setAttribute('visible', 'true');
+            // opacity: 1にして表示
             msg.setAttribute('material', 'opacity', '1');
           }, 3000);
         }
@@ -92,4 +92,3 @@
     </script>
   </body>
 </html>
-
