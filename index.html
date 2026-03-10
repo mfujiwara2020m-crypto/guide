@@ -2,34 +2,37 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <title>AR Persistent Background Scene</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
 
-  <body style="margin:0px; overflow:hidden;">
-    <a-scene embedded vr-mode-ui="enabled: false;" arjs="sourceType: webcam; debugUIEnabled: false;">
+  <body style="margin: 0px; overflow: hidden;">
+    <a-scene 
+      embedded 
+      vr-mode-ui="enabled: false;" 
+      arjs="sourceType: webcam; debugUIEnabled: false;">
       
       <a-assets>
         <img id="testImage" src="test.png">
         <img id="originalImg" src="original.png">
       </a-assets>
 
+      <a-sky 
+        id="bg-panel"
+        src="#testImage" 
+        material="shader: flat; opacity: 0; transparent: true;"
+        rotation="0 -90 0">
+      </a-sky>
+
       <a-entity camera id="main-camera" look-controls>
         
-        <a-image 
-          id="bg-panel"
-          src="#testImage" 
-          position="0 0 -20" 
-          scale="40 25 1" 
-          material="shader: flat; opacity: 0; transparent: true;">
-        </a-image>
-
         <a-image 
           id="original-sprite"
           src="#originalImg" 
           position="0 0 -5" 
           scale="10 10 1"
-          material="shader: flat; opacity: 0; transparent: true;"
+          material="shader: flat; opacity: 0; transparent: true; alphaTest: 0.5;"
           animation="property: scale; to: 2 2 1; dur: 3000; easing: easeOutQuad; startEvents: start-shrinking"
           animation__fade="property: material.opacity; to: 1; dur: 500; startEvents: start-fadein">
         </a-image>
@@ -64,18 +67,18 @@
           isTriggered = true;
           console.log("マーカー検知！演出を開始します...");
 
-          // ① 即座に背景を不透明にする
+          // ① 背景(a-sky)を即座に表示。これで「カメラ連動背景」が完成
           bg.setAttribute('material', 'opacity', '1');
 
-          // ② 3秒(3000ms)待ってからメイン画像を表示
+          // ② 3秒(3000ms)待ってからメイン画像を演出付きで表示
           setTimeout(() => {
-            // フェードインと縮小アニメーションを開始
+            // アニメーションイベント（フェードインと縮小）を発生させる
             sprite.emit('start-fadein');
             sprite.emit('start-shrinking');
             
             // メッセージも表示
             msg.setAttribute('material', 'opacity', '1');
-            console.log("演出完了");
+            console.log("演出完了：original.pngを表示しました");
           }, 3000);
         }
       });
