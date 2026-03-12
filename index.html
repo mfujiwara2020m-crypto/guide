@@ -63,30 +63,25 @@
       
       let isTriggered = false;
 
-      // iPhone/iPadのセンサー許可のためのタップイベント
-      window.addEventListener('touchstart', () => { 
-        console.log("Sensors Ready"); 
-      });
+      // iPhone/iPad センサー起動用
+      window.addEventListener('touchstart', () => { console.log("Start"); });
 
-      // マーカーを読み込んだ時の処理
       marker.addEventListener('markerFound', () => {
         if (!isTriggered) {
           isTriggered = true;
 
-          // 背景を即座に表示（カメラを動かすと背景が動く状態に）
+          // 【重要】マーカーを見つけたら、まず即座に背景を表示
           bg.setAttribute('visible', 'true');
           bg.setAttribute('material', 'opacity', '1');
+          console.log("360 background triggered");
 
-          // 3秒後にメイン画像とメッセージを演出付きで表示
+          // 3秒後に画像とメッセージを出す
           setTimeout(() => {
-            // メイン画像を表示して縮小させる
             sprite.emit('start-fadein');
             sprite.emit('start-shrinking');
             
-            // メッセージ画像を表示（不透明度を1に）
             msg.setAttribute('visible', 'true');
             msg.setAttribute('material', 'opacity', '1');
-            console.log("Display Success: original_v2 and message");
           }, 3000);
         }
       });
