@@ -2,34 +2,33 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <title>AR 360 View - Seimon</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
 
   <body style="margin: 0px; overflow: hidden;">
     <a-scene 
       embedded 
-      vr-mode-ui="enabled: false;" 
       arjs="sourceType: webcam; debugUIEnabled: false;"
-      renderer="precision: medium; logarithmicDepthBuffer: true;">
+      renderer="logarithmicDepthBuffer: true;"
+      vr-mode-ui="enabled: false">
       
       <a-assets>
-        <img id="testImage" src="360seimon.jpg">
+        <img id="seimon" src="360seimon.jpg">
         <img id="originalImg" src="original_v2.png">
-       
+        <img id="messageImg" src="message.png">
       </a-assets>
 
-      <a-image 
-        id="bg-panel"
-        src="#testImage" 
-        position="0 0 -40" 
-        scale="100 60 1" 
-        material="shader: flat; transparent: true; opacity: 0;"
+      <a-sky 
+        id="bg-sky"
+        src="#seimon" 
+        rotation="0 -90 0" 
+        material="transparent: true; opacity: 0"
         visible="false">
-      </a-image>
+      </a-sky>
 
-      <a-entity camera id="main-camera" look-controls>
-        
+      <a-entity camera look-controls>
         <a-image 
           id="original-sprite"
           src="#originalImg" 
@@ -40,35 +39,48 @@
           animation__fade="property: material.opacity; to: 1; dur: 500; startEvents: start-fadein">
         </a-image>
 
-       
-
+        <a-image
+          id="message-text"
+          src="#messageImg"
+          position="0 0.7 -3.0" 
+          scale="3 1 1" 
+          material="shader: flat; transparent: true; opacity: 0; alphaTest: 0.1; depthWrite: false; depthTest: false;"
+          visible="false">
+        </a-image>
       </a-entity>
 
       <a-marker preset="hiro" id="marker-switch"></a-marker>
-      
+
     </a-scene>
 
     <script>
       const marker = document.querySelector('#marker-switch');
-      const bg = document.querySelector('#bg-panel');
+      const sky = document.querySelector('#bg-sky');
       const sprite = document.querySelector('#original-sprite');
       const msg = document.querySelector('#message-text');
       
       let isTriggered = false;
 
-      // iPhone/iPad センサー起動用
-      window.addEventListener('touchstart', () => { console.log("Start"); });
+      // iPadのジャイロ起動のための必須処理
+      window.addEventListener('click', function () {
+          const scene = document.querySelector('a-scene');
+          if (scene.hasLoaded) {
+              // センサーの許可を促す
+              if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                  DeviceOrientationEvent.requestPermission();
+              }
+          }
+      });
 
       marker.addEventListener('markerFound', () => {
         if (!isTriggered) {
           isTriggered = true;
 
-          // 【重要】マーカーを見つけたら、まず即座に背景を表示
-          bg.setAttribute('visible', 'true');
-          bg.setAttribute('material', 'opacity', '1');
-          console.log("360 background triggered");
+          // 背景（360度）を即座に表示
+          sky.setAttribute('visible', 'true');
+          sky.setAttribute('material', 'opacity', '1');
 
-          // 3秒後に画像とメッセージを出す
+          // 3秒後に画像と文字を表示
           setTimeout(() => {
             sprite.emit('start-fadein');
             sprite.emit('start-shrinking');
@@ -81,7 +93,3 @@
     </script>
   </body>
 </html>
-
-
-
-
